@@ -5,7 +5,7 @@ version = "0.5.0"
 edition = "2018"
 authors = [
     "Sven-Hendrik Haase <svenstaro@gmail.com>",
-    "Alexander Dmitriev <alexander.dmitriev2580@gmail.com>"
+    "Alexander Dmitriev <alexander.dmitriev2580@gmail.com>",
 ]
 readme = "README.md"
 repository = "https://github.com/svenstaro/bvh"
@@ -18,7 +18,7 @@ approx = "0.5"
 rand = "0.8"
 log = "0.4"
 num = "0.4"
-glam = "0.16"
+glam = "0.13.1"
 
 [dev-dependencies]
 proptest = "1.0"
