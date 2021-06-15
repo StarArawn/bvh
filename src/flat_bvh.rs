@@ -376,9 +376,10 @@ impl BoundingHierarchy for FlatBVH {
     /// let ray = Ray::new(origin, direction);
     /// let mut shapes = create_bhshapes();
     /// let flat_bvh = FlatBVH::build(&mut shapes);
-    /// let hit_shapes = flat_bvh.traverse(&ray, &shapes);
+    /// let shape_references = shapes.iter().collect::<Vec<_>>();
+    /// let hit_shapes = flat_bvh.traverse(&ray, &shape_references);
     /// ```
-    fn traverse<'a, T: Bounded>(&'a self, ray: &Ray, shapes: &'a [T]) -> Vec<&T> {
+    fn traverse<'a, T: Bounded>(&'a self, ray: &Ray, shapes: &'a [&'a T]) -> Vec<&T> {
         let mut hit_shapes = Vec::new();
         let mut index = 0;
 
@@ -391,7 +392,7 @@ impl BoundingHierarchy for FlatBVH {
 
             if node.entry_index == u32::max_value() {
                 // If the entry_index is MAX_UINT32, then it's a leaf node.
-                let shape = &shapes[node.shape_index as usize];
+                let shape = shapes[node.shape_index as usize];
                 if ray.intersects_aabb(&shape.aabb()) {
                     hit_shapes.push(shape);
                 }

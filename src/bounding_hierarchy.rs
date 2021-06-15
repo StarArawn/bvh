@@ -157,13 +157,14 @@ pub trait BoundingHierarchy {
     /// let origin = Point3::new(0.0, 0.0, 0.0);
     /// let direction = Vector3::new(1.0, 0.0, 0.0);
     /// let ray = Ray::new(origin, direction);
-    /// let hit_shapes = bvh.traverse(&ray, &shapes);
+    /// let shape_references = shapes.iter().collect::<Vec<_>>();
+    /// let hit_shapes = bvh.traverse(&ray, &shape_references);
     /// ```
     ///
     /// [`BoundingHierarchy`]: trait.BoundingHierarchy.html
     /// [`AABB`]: ../aabb/struct.AABB.html
     ///
-    fn traverse<'a, Shape: BHShape>(&'a self, ray: &Ray, shapes: &'a [Shape]) -> Vec<&Shape>;
+    fn traverse<'a, Shape: BHShape>(&'a self, ray: &Ray, shapes: &'a [&'a Shape]) -> Vec<&Shape>;
 
     /// Prints the [`BoundingHierarchy`] in a tree-like visualization.
     ///

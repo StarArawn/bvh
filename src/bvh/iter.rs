@@ -10,7 +10,7 @@ pub struct BVHTraverseIterator<'a, Shape: Bounded> {
     /// Reference to the input ray
     ray: &'a Ray,
     /// Reference to the input shapes array
-    shapes: &'a [Shape],
+    shapes: &'a [&'a Shape],
     /// Traversal stack. 4 billion items seems enough?
     stack: [usize; 32],
     /// Position of the iterator in bvh.nodes
@@ -23,7 +23,7 @@ pub struct BVHTraverseIterator<'a, Shape: Bounded> {
 
 impl<'a, Shape: Bounded> BVHTraverseIterator<'a, Shape> {
     /// Creates a new `BVHTraverseIterator`
-    pub fn new(bvh: &'a BVH, ray: &'a Ray, shapes: &'a [Shape]) -> Self {
+    pub fn new(bvh: &'a BVH, ray: &'a Ray, shapes: &'a [&'a Shape]) -> Self {
         BVHTraverseIterator {
             bvh,
             ray,
@@ -161,7 +161,7 @@ mod tests {
     fn traverse_and_verify_vec(
         ray_origin: Point3,
         ray_direction: Vector3,
-        all_shapes: &[UnitBox],
+        all_shapes: &[&UnitBox],
         bvh: &BVH,
         expected_shapes: &HashSet<i32>,
     ) {
@@ -177,7 +177,7 @@ mod tests {
     fn traverse_and_verify_iterator(
         ray_origin: Point3,
         ray_direction: Vector3,
-        all_shapes: &[UnitBox],
+        all_shapes: &[&UnitBox],
         bvh: &BVH,
         expected_shapes: &HashSet<i32>,
     ) {
@@ -195,7 +195,7 @@ mod tests {
     fn traverse_and_verify_base(
         ray_origin: Point3,
         ray_direction: Vector3,
-        all_shapes: &[UnitBox],
+        all_shapes: &[&UnitBox],
         bvh: &BVH,
         expected_shapes: &HashSet<i32>,
     ) {
@@ -217,7 +217,13 @@ mod tests {
             for id in -10..11 {
                 expected_shapes.insert(id);
             }
-            traverse_and_verify_base(origin, direction, &all_shapes, &bvh, &expected_shapes);
+            traverse_and_verify_base(
+                origin,
+                direction,
+                &all_shapes.iter().collect::<Vec<_>>(),
+                &bvh,
+                &expected_shapes,
+            );
         }
 
         {
@@ -228,7 +234,13 @@ mod tests {
             // It should hit only one box.
             let mut expected_shapes = HashSet::new();
             expected_shapes.insert(0);
-            traverse_and_verify_base(origin, direction, &all_shapes, &bvh, &expected_shapes);
+            traverse_and_verify_base(
+                origin,
+                direction,
+                &all_shapes.iter().collect::<Vec<_>>(),
+                &bvh,
+                &expected_shapes,
+            );
         }
 
         {
@@ -241,7 +253,13 @@ mod tests {
             expected_shapes.insert(4);
             expected_shapes.insert(5);
             expected_shapes.insert(6);
-            traverse_and_verify_base(origin, direction, &all_shapes, &bvh, &expected_shapes);
+            traverse_and_verify_base(
+                origin,
+                direction,
+                &all_shapes.iter().collect::<Vec<_>>(),
+                &bvh,
+                &expected_shapes,
+            );
         }
     }
 

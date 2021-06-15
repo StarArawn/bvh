@@ -46,6 +46,7 @@ pub fn main() {
     let origin = Point3::new(0.0, 0.0, 0.0);
     let direction = Vector3::new(1.0, 0.0, 0.0);
     let ray = Ray::new(origin, direction);
-    let hit_sphere_aabbs = bvh.traverse(&ray, &spheres);
+    let sphere_references = spheres.iter().collect::<Vec<_>>();
+    let hit_sphere_aabbs = bvh.traverse(&ray, &sphere_references);
     dbg!(hit_sphere_aabbs);
 }

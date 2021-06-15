@@ -430,12 +430,16 @@ impl BVH {
     /// [`BVH`]: struct.BVH.html
     /// [`AABB`]: ../aabb/struct.AABB.html
     ///
-    pub fn traverse<'a, Shape: Bounded>(&'a self, ray: &Ray, shapes: &'a [Shape]) -> Vec<&Shape> {
+    pub fn traverse<'a, Shape: Bounded>(
+        &'a self,
+        ray: &Ray,
+        shapes: &'a [&'a Shape],
+    ) -> Vec<&Shape> {
         let mut indices = Vec::new();
         BVHNode::traverse_recursive(&self.nodes, 0, ray, &mut indices);
         indices
             .iter()
-            .map(|index| &shapes[*index])
+            .map(|index| shapes[*index])
             .collect::<Vec<_>>()
     }
 
@@ -448,7 +452,7 @@ impl BVH {
     pub fn traverse_iterator<'a, Shape: Bounded>(
         &'a self,
         ray: &'a Ray,
-        shapes: &'a [Shape],
+        shapes: &'a [&'a Shape],
     ) -> BVHTraverseIterator<Shape> {
         BVHTraverseIterator::new(self, ray, shapes)
     }
@@ -716,7 +720,7 @@ impl BoundingHierarchy for BVH {
         BVH::build(shapes)
     }
 
-    fn traverse<'a, Shape: Bounded>(&'a self, ray: &Ray, shapes: &'a [Shape]) -> Vec<&Shape> {
+    fn traverse<'a, Shape: Bounded>(&'a self, ray: &Ray, shapes: &'a [&'a Shape]) -> Vec<&Shape> {
         self.traverse(ray, shapes)
     }
 

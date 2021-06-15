@@ -111,7 +111,7 @@ pub fn build_some_bh<BH: BoundingHierarchy>() -> (Vec<UnitBox>, BH) {
 fn traverse_and_verify<BH: BoundingHierarchy>(
     ray_origin: Point3,
     ray_direction: Vector3,
-    all_shapes: &[UnitBox],
+    all_shapes: &[&UnitBox],
     bh: &BH,
     expected_shapes: &HashSet<i32>,
 ) {
@@ -138,7 +138,13 @@ pub fn traverse_some_bh<BH: BoundingHierarchy>() {
         for id in -10..11 {
             expected_shapes.insert(id);
         }
-        traverse_and_verify(origin, direction, &all_shapes, &bh, &expected_shapes);
+        traverse_and_verify(
+            origin,
+            direction,
+            &all_shapes.iter().collect::<Vec<_>>(),
+            &bh,
+            &expected_shapes,
+        );
     }
 
     {
@@ -149,7 +155,13 @@ pub fn traverse_some_bh<BH: BoundingHierarchy>() {
         // It should hit only one box.
         let mut expected_shapes = HashSet::new();
         expected_shapes.insert(0);
-        traverse_and_verify(origin, direction, &all_shapes, &bh, &expected_shapes);
+        traverse_and_verify(
+            origin,
+            direction,
+            &all_shapes.iter().collect::<Vec<_>>(),
+            &bh,
+            &expected_shapes,
+        );
     }
 
     {
@@ -162,7 +174,13 @@ pub fn traverse_some_bh<BH: BoundingHierarchy>() {
         expected_shapes.insert(4);
         expected_shapes.insert(5);
         expected_shapes.insert(6);
-        traverse_and_verify(origin, direction, &all_shapes, &bh, &expected_shapes);
+        traverse_and_verify(
+            origin,
+            direction,
+            &all_shapes.iter().collect::<Vec<_>>(),
+            &bh,
+            &expected_shapes,
+        );
     }
 }
 

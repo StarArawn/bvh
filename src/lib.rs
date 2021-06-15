@@ -61,7 +61,8 @@
 //! }
 //!
 //! let bvh = BVH::build(&mut spheres);
-//! let hit_sphere_aabbs = bvh.traverse(&ray, &spheres);
+//! let sphere_references = spheres.iter().collect::<Vec<_>>();
+//! let hit_sphere_aabbs = bvh.traverse(&ray, &sphere_references);
 //! ```
 //!
 
